@@ -6,6 +6,6 @@ This is a semester project for the Software Engineering course at Kennesaw State
 
 ## Contributors:
 
-[Zachary Jones](https://github.com/zacharytamas)
-[Stanley Gilstrap](https://github.com/Stangil)
-[Dewong Lucas Jr](https://github.com/Dewonglucas11)
+- [Zachary Jones](https://github.com/zacharytamas)
+- [Stanley Gilstrap](https://github.com/Stangil)
+- [Dewong Lucas Jr](https://github.com/Dewonglucas11)
