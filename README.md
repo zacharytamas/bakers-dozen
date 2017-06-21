@@ -10,3 +10,4 @@ This is a semester project for the Software Engineering course at Kennesaw State
 - [Stanley Gilstrap](https://github.com/Stangil)
 - [Dewong Lucas Jr](https://github.com/Dewonglucas11)
 - [Matthew Hull](https://github.com/mattdhull94)
+- [Anthony Lee](https://github.com/anthonylee83)
