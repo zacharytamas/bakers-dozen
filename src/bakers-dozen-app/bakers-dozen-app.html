@@ -1,0 +1,31 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="bakers-dozen-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    Much architecture planning to be done here.
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class BakersDozenApp extends Polymer.Element {
+      static get is() { return 'bakers-dozen-app'; }
+      static get properties() {
+        return {
+          // TODO(zachary) no properties right now, pending architecture
+        };
+      }
+    }
+
+    window.customElements.define(BakersDozenApp.is, BakersDozenApp);
+  </script>
+</dom-module>
