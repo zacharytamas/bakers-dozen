@@ -23,6 +23,11 @@ To develop on this project you'll need:
 
 ### Typical lifecycle
 
+Often when you pull changes or switch branches you'll want to fetch any dependencies thay may have been added. The easy way to do this is to just run the following in the root directory of the project:
+
+    npm install
+    bower install
+
 When developing you can start the built-in Polymer server with:
 
     polymer serve
