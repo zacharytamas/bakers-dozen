@@ -3,7 +3,8 @@
   "description": "A Baker&#39;s Dozen solitaire game.",
   "main": "index.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0"
+    "polymer": "Polymer/polymer#^2.0.0",
+    "game-card": "vpusher/game-card#^1.0.5"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
