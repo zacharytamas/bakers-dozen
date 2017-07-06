@@ -12,7 +12,6 @@ type CardRank =
 interface Card {
   suit: CardSuite
   rank: CardRank
-  faceUp: boolean
 }
 
 interface Stack {
