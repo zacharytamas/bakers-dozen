@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/game-card/game-card.html">
+
+<dom-module id="card-stack">
+  <template>
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+      }
+
+      .stack {
+        position: relative;
+      }
+
+      .stack game-card {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        /* These are copied from `game-card`'s `:host` property
+           so we can override if needed. */
+        font-size: 2em;
+        height: 176px; /* 88 * 2 */
+        width: 124px; /* 62 * 2 */
+      }
+
+      .stack game-card[position="1"] { top: 40px; }
+      .stack game-card[position="2"] { top: 80px; }
+      .stack game-card[position="3"] { top: 120px; }
+
+    </style>
+
+    <div class="stack">
+      <template is="dom-repeat" items="[[stack.cards]]">
+        <game-card position$="[[index]]"
+          rank="[[item.rank]]"
+          symbol="[[_symbolForSuit(item.suit)]]"></game-card>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class CardStack extends Polymer.Element {
+      static get is() { return 'card-stack'; }
+      static get properties() {
+        return {
+          stack: {
+            type: Object,
+            value: () => ({
+              cards: [
+                { suit: 'Spade', rank: '9' },
+                { suit: 'Club', rank: '7' },
+                { suit: 'Diamond', rank: '7' },
+                { suit: 'Heart', rank: '2' },
+              ]
+            })
+          }
+        };
+      }
+
+      _symbolForSuit(suit) {
+        // The unicode symbols for these are handily available as
+        // static properties on the GameCard class.
+        return GameCard[suit.toUpperCase()];
+      }
+    }
+
+    window.customElements.define(CardStack.is, CardStack);
+  </script>
+</dom-module>
