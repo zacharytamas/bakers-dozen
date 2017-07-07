@@ -5,29 +5,30 @@
   <template>
     <style>
       :host {
-        display: block;
-        width: 100%;
+        display: inline-block;
+        width: 124px;
+        margin: 16px;
       }
 
       .stack {
-        position: relative;
+        @apply --layout-vertical;
       }
 
       .stack game-card {
-        position: absolute;
-        top: 0;
-        left: 0;
-
-        /* These are copied from `game-card`'s `:host` property
-           so we can override if needed. */
         font-size: 2em;
         height: 176px; /* 88 * 2 */
         width: 124px; /* 62 * 2 */
+
+        margin-top: -136px;  /* this is -(heightOfCard - 40) */
       }
 
-      .stack game-card[position="1"] { top: 40px; }
+      .stack game-card:first-child {
+        margin-top: 0;
+      }
+
+      /*.stack game-card[position="1"] { top: 40px; }
       .stack game-card[position="2"] { top: 80px; }
-      .stack game-card[position="3"] { top: 120px; }
+      .stack game-card[position="3"] { top: 120px; }*/
 
     </style>
 
@@ -51,15 +52,7 @@
       static get properties() {
         return {
           stack: {
-            type: Object,
-            value: () => ({
-              cards: [
-                { suit: 'Spade', rank: '9' },
-                { suit: 'Club', rank: '7' },
-                { suit: 'Diamond', rank: '7' },
-                { suit: 'Heart', rank: '2' },
-              ]
-            })
+            type: Object
           }
         };
       }

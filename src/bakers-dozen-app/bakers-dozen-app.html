@@ -1,16 +1,27 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 
-<link rel="import" href="../card-stack/card-stack.html">
+<link rel="import" href="../game-board/game-board.html">
+<link rel="import" href="../board-generator/board-generator.html">
 
 <dom-module id="bakers-dozen-app">
   <template>
     <style>
       :host {
         display: block;
+
+        @apply --layout-fit;
+        @apply --layout-vertical;
+      }
+
+      game-board {
+        @apply --layout-flex;
       }
     </style>
 
-    <card-stack></card-stack>
+    <board-generator id="generator"></board-generator>
+
+    <game-board board-state="[[gameState.boardState]]"></game-board>
 
   </template>
 
@@ -23,8 +34,22 @@
       static get is() { return 'bakers-dozen-app'; }
       static get properties() {
         return {
-          // TODO(zachary) no properties right now, pending architecture
+          gameState: {
+            type: Object
+          }
         };
+      }
+
+      ready() {
+        super.ready();
+
+        this.dealNewGame();
+      }
+
+      dealNewGame() {
+        this.set('gameState', {
+          boardState: this.$.generator.generateNewBoardState()
+        });
       }
     }
 
