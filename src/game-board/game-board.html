@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../tableau-area/tableau-area.html">
+
+<dom-module id="game-board">
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply --layout-flex;
+        @apply --layout-horizontal;
+      }
+
+      tableau-area {
+        @apply --layout-flex;
+      }
+    </style>
+
+    <tableau-area stacks="[[boardState.tableauStacks]]"></tableau-area>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class GameBoard extends Polymer.Element {
+      static get is() { return 'game-board'; }
+      static get properties() {
+        return {
+          boardState: {
+            type: Object
+          }
+        };
+      }
+    }
+
+    window.customElements.define(GameBoard.is, GameBoard);
+  </script>
+</dom-module>

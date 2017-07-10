@@ -1,0 +1,47 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../card-stack/card-stack.html">
+
+<dom-module id="tableau-area">
+  <template>
+    <style>
+      :host {
+        display: block;
+
+        @apply --layout-vertical;
+      }
+
+      .stacks-row {
+        @apply --layout-flex;
+      }
+
+    </style>
+
+    <div class="stacks-row">
+      <template is="dom-repeat" items="[[stacks]]">
+        <card-stack stack="[[item]]"></card-stack>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class TableauArea extends Polymer.Element {
+      static get is() { return 'tableau-area'; }
+      static get properties() {
+        return {
+          stacks: {
+            type: Array
+          }
+        };
+      }
+    }
+
+    window.customElements.define(TableauArea.is, TableauArea);
+  </script>
+</dom-module>

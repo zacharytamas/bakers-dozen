@@ -1,0 +1,77 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+
+<script>
+  /**
+    * @customElement
+    * @polymer
+    */
+  class BoardGenerator extends Polymer.Element {
+    static get is() { return 'board-generator'; }
+
+    _generateSuitOfCards(suit) {
+      return ['a','2','3','4','5','6','7','8','9','10','j','q','k'].reduce(
+        (hand, rank) => {
+          hand.push({suit, rank});
+          return hand;
+        }, []);
+    }
+
+    _shuffleDeck(deck) {
+      var currentIndex = deck.length, temporaryValue, randomIndex;
+      deck = deck.slice();
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = deck[currentIndex];
+        deck[currentIndex] = deck[randomIndex];
+        deck[randomIndex] = temporaryValue;
+      }
+
+      return deck;
+    }
+
+    _generateDeckOfCards() {
+      return ['heart', 'spade', 'diamond', 'club'].reduce((acc, suit) => {
+        acc.push.apply(acc, this._generateSuitOfCards(suit));
+        return acc;
+      }, []);
+    }
+
+    _dealDeckIntoTableauStacks(deck) {
+      const decks = [];
+      deck = deck.slice();
+
+      while (deck.length > 0) {
+        decks.push(deck.splice(0, 4));
+      }
+
+      return decks.map(deck => ({
+        cards: deck
+      }));
+    }
+
+    generateNewBoardState() {
+      const deck = this._shuffleDeck(this._generateDeckOfCards());
+      const tableauStacks = this._dealDeckIntoTableauStacks(deck);
+
+      return {
+          foundationStacks: [
+            {cards: []},
+            {cards: []},
+            {cards: []},
+            {cards: []}
+          ],
+          tableauStacks
+        };
+    }
+  }
+
+  window.customElements.define(BoardGenerator.is, BoardGenerator);
+</script>

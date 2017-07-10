@@ -4,7 +4,8 @@
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "game-card": "vpusher/game-card#^1.0.5"
+    "game-card": "vpusher/game-card#^1.0.5",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
