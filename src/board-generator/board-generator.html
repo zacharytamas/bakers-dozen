@@ -10,11 +10,8 @@
     static get is() { return 'board-generator'; }
 
     _generateSuitOfCards(suit) {
-      return ['a','2','3','4','5','6','7','8','9','10','j','q','k'].reduce(
-        (hand, rank) => {
-          hand.push({suit, rank});
-          return hand;
-        }, []);
+      return ['a','2','3','4','5','6','7','8','9','10','j','q','k']
+        .map(rank => ({suit, rank}));
     }
 
     _shuffleDeck(deck) {
