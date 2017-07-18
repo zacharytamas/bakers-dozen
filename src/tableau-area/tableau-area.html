@@ -14,13 +14,26 @@
 
       .stacks-row {
         @apply --layout-flex;
+        width:1200px;
+      }
+      .stacks-row .tableau-top{
+        vertical-align:top;
+
+      }
+      .stacks-row .tableau-bottom{
+      vertical-align:bottom:
       }
 
     </style>
 
     <div class="stacks-row">
-      <template is="dom-repeat" items="[[stacks]]">
-        <card-stack stack="[[item]]"></card-stack>
+      <template is="dom-repeat" items="[[stacks]]" index-as="stack_no">
+        <template is="dom-if" if="{{_isTop(stack_no)}}">
+            <card-stack ondragover="_dragOver(event)" ondrop="_drop(event)" class="tableau-top" stack="[[item]]"></card-stack>
+        </template>
+        <template is="dom-if" if="{{!_isTop(stack_no)}}">
+            <card-stack ondragover="_dragOver(event)" ondrop="_drop(event)" class="tableau-bottom" stack="[[item]]"></card-stack>
+        </template>
       </template>
     </div>
 
@@ -39,6 +52,12 @@
             type: Array
           }
         };
+      }
+
+      _isTop(index) {
+        if(index <7)
+          return true;
+        return false;
       }
     }
 
