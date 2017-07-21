@@ -1,0 +1,88 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../card-stack/card-stack.html">
+
+<dom-module id="foundation-area">
+  <template>
+    <style>
+      :host {
+        display: block;
+
+        @apply --layout-vertical;
+      }
+
+      .foundation-row {
+        @apply --layout-flex;
+      }
+      .foundation-stack{
+        display:block;
+        margin:16px;
+        width:124px;
+        height:176px;
+        border:1px solid #000;
+        border-radius:.35em;
+      }
+      .red{
+        color:red;
+      }
+      .symbol{
+        font-size:3em;
+        display:inline-block;
+        position:relative;
+        padding:15px;
+
+        float:left;
+        vertical-align:middle;
+        text-align: center;
+      }
+      .top{
+
+      }
+      .bottom{
+
+      }
+      .left{
+
+      }
+      .right{
+
+      }
+
+
+    </style>
+
+    <div class="foundation-row">
+      <template is="dom-repeat" items="[[stacks]]">
+        <div class="foundation-stack">
+          <span class="top left symbol">♠</span>
+          <span class="top right symbol red">♦</span>
+          <span class="bottom left symbol red">♥</span>
+          <span class="bottom right symbol">♣</span>
+          <card-stack ondragover="_dragOver(event)" ondrop="_drop(event)" stack="[[item]]"></card-stack>
+        </div>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class FoundationArea extends Polymer.Element {
+      static get is() { return 'foundation-area'; }
+      static get properties() {
+        return {
+          stacks: {
+            type: Array
+          }
+        };
+      }
+
+    }
+
+    window.customElements.define(FoundationArea.is, FoundationArea);
+  </script>
+</dom-module>

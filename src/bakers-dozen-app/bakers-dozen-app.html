@@ -42,7 +42,7 @@
 
       ready() {
         super.ready();
-
+        this.addEventListener('new-game', this.dealNewGame);
         this.dealNewGame();
       }
 
@@ -51,6 +51,7 @@
           boardState: this.$.generator.generateNewBoardState()
         });
       }
+
     }
 
     window.customElements.define(BakersDozenApp.is, BakersDozenApp);

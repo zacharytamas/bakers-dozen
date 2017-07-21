@@ -2,7 +2,7 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../tableau-area/tableau-area.html">
-
+<link rel="import" href="../foundation-area/foundation-area.html">
 <dom-module id="game-board">
   <template>
     <style>
@@ -10,14 +10,25 @@
         display: block;
         @apply --layout-flex;
         @apply --layout-horizontal;
+        background-color: #076324;
       }
 
       tableau-area {
+        dispaly:block
+        height:95%;
         @apply --layout-flex;
       }
-    </style>
+      foundation-area{
+        height:95%;
+        display:block;
+      }
 
-    <tableau-area stacks="[[boardState.tableauStacks]]"></tableau-area>
+    </style>
+    <div id="menu">
+      <button on-click="_dealNewGame">New Game</button>
+    </div>
+    <tableau-area  stacks="[[boardState.tableauStacks]]"></tableau-area>
+    <foundation-area stacks="[[boardState.foundationStacks]]"></foundation-area>
 
   </template>
 
@@ -34,6 +45,10 @@
             type: Object
           }
         };
+      }
+
+      _dealNewGame(e){
+        this.dispatchEvent(new CustomEvent('new-game',{bubbles: true, composed: true}));
       }
     }
 

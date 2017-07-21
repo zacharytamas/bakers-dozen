@@ -34,7 +34,7 @@
 
     <div class="stack">
       <template is="dom-repeat" items="[[stack.cards]]">
-        <game-card position$="[[index]]"
+        <game-card draggable="true" ondragstart="_dragStart(event)" position$="[[index]]"
           rank="[[item.rank]]"
           symbol="[[_symbolForSuit(item.suit)]]"></game-card>
       </template>
@@ -61,6 +61,17 @@
         // The unicode symbols for these are handily available as
         // static properties on the GameCard class.
         return GameCard[suit.toUpperCase()];
+      }
+
+      _dragOver(e){
+        e.preventDefault();
+      }
+      _drop(e){
+        e.preventDefault();
+        var card = e.dataTransfer.getData('card');
+        var stack = e.target;
+        this.dispatchEvent(new CustomEvent('card-dropped', {detail:{card: card, stack:stack}}));
+
       }
     }
 
