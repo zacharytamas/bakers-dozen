@@ -45,8 +45,18 @@
       const decks = [];
       deck = deck.slice();
 
-      while (deck.length > 0) {
+        while (deck.length > 0) {
         decks.push(deck.splice(0, 4));
+        var Cards = new Array;
+        for (var o in decks){
+          Cards.push(decks[o]);
+        }
+        for (var stack in decks) {
+          for (var card in decks[stack]) {
+            //There should be a way here for me to mess with the properties, but can't access them.
+            console.log();
+          }
+        }
       }
 
       return decks.map(deck => ({
