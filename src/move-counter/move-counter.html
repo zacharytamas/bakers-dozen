@@ -1,0 +1,39 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="move-counter">
+  <template>
+    <style>
+      :host {
+        margin: 0px 1em;
+        color: #fff;
+        font-size: 1.3em;
+      }
+    </style>
+    <div class="counter">Moves: [[moves]]</div>
+  </template>
+
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class MoveCounter extends Polymer.Element {
+      static get is() {
+        return 'move-counter';
+      }
+      static get properties() {
+        return {
+          moves: {
+            type: Number
+          }
+        };
+      }
+      attached() {
+        this.addEventListener('card-moved', this.moves++);
+      }
+    }
+    window.customElements.define(MoveCounter.is, MoveCounter);
+  </script>
+
+</dom-module>

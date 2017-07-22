@@ -3,6 +3,7 @@
 
 <link rel="import" href="../tableau-area/tableau-area.html">
 <link rel="import" href="../foundation-area/foundation-area.html">
+<link rel="import" href="../move-counter/move-counter.html">
 <dom-module id="game-board">
   <template>
     <style>
@@ -26,6 +27,7 @@
     </style>
     <div id="menu">
       <button on-click="_dealNewGame">New Game</button>
+      <move-counter moves="[[boardState.moves]]"></move-counter>
     </div>
     <tableau-area  stacks="[[boardState.tableauStacks]]"></tableau-area>
     <foundation-area stacks="[[boardState.foundationStacks]]"></foundation-area>
