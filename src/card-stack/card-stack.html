@@ -37,7 +37,6 @@
         <game-card
           draggable="true"
           on-drag="_dragStart"
-          on-drop="_drop"
           position$="[[index]]"
           rank="[[item.rank]]"
           symbol="[[_symbolForSuit(item.suit)]]"></game-card>
@@ -68,15 +67,9 @@
       }
 
       _dragStart(e){
-        e.preventDefault();
+        this.dispatchEvent(new CustomEvent('drag-start', {detail: {card: e.target, stack: this}, bubbles: true, composed: true}));
       }
 
-      _drop(e){
-        e.preventDefault();
-        var card = e.dataTransfer.getData('card');
-        var stack = e.target;
-        this.dispatchEvent(new CustomEvent('card-dropped', {detail:{card: card, stack:stack}}));
-      }
     }
 
     window.customElements.define(CardStack.is, CardStack);

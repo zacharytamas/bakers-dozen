@@ -29,10 +29,10 @@
     <div class="stacks-row">
       <template is="dom-repeat" items="[[stacks]]">
         <template is="dom-if" if="{{_isTop(index)}}">
-            <card-stack ondragover="_dragOver(event)" ondrop="_drop(event)" class="tableau-top" stack="[[item]]"></card-stack>
+            <card-stack on-dragover="_dragOver" on-drop="_drop" class="tableau-top" stack="{{item}}"></card-stack>
         </template>
         <template is="dom-if" if="{{!_isTop(index)}}">
-            <card-stack ondragover="_dragOver(event)" ondrop="_drop(event)" class="tableau-bottom" stack="[[item]]"></card-stack>
+            <card-stack on-dragover="_dragOver" on-drop="_drop" class="tableau-bottom" stack="{{item}}"></card-stack>
         </template>
       </template>
     </div>
@@ -59,6 +59,15 @@
           return true;
         return false;
       }
+
+      _dragOver(e){
+        e.preventDefault();
+      }
+      _drop(e){
+          e.preventDefault();
+          this.dispatchEvent(new CustomEvent('card-dropped', {detail: e.target, bubbles: true, composed: true}));
+      }
+
     }
 
     window.customElements.define(TableauArea.is, TableauArea);

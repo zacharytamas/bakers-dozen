@@ -54,13 +54,13 @@
 
     <div class="foundation-row">
       <template is="dom-repeat" items="[[stacks]]">
-        <div class="foundation-stack">
+        <div class="foundation-stack" on-dragOver="_dragOver" on-drop="_drop">
           <span class="top left symbol">♠</span>
           <span class="top right symbol red">♦</span>
           <span class="bottom left symbol red">♥</span>
           <span class="bottom right symbol">♣</span>
           <card-stack
-            stack="[[item]]"></card-stack>
+            stack="[[item]]" ></card-stack>
         </div>
       </template>
     </div>
@@ -77,9 +77,18 @@
       static get properties() {
         return {
           stacks: {
-            type: Array
+            type: Array,
+            notify: true
           }
         };
+      }
+
+      _dragOver(e) {
+          e.preventDefault();
+      }
+      _drop(e){
+        e.preventDefault();
+
       }
 
     }
