@@ -46,7 +46,30 @@
       deck = deck.slice();
 
       while (deck.length > 0) {
-        decks.push(deck.splice(0, 4));
+        // Cut a stack of four cards and save as a new array called `stack`.
+        const stack = deck.splice(0, 4);
+        let kingsFound = 0;
+
+        // We need to move any Kings in the stack towards the top of the stack.
+        // This effectively means moving them to the end of the array. Unfortunately
+        // to do this we need to iterate through all of them to check.
+        for (let i = 0; i < stack.length - kingsFound; i++) {
+          // If the card is a King, we need to pluck it from the stack and
+          // put it on the end.
+          if (stack[i - kingsFound].rank == 'k') {
+            // Remove the card by splicing the stack array at the current index
+            // `splice` returns an array of the removed elements. Since we are
+            // only removing one it is an array of one so I just immediately
+            // take the zero-th one to get a reference to the actual card.
+            let aKing = stack.splice(i - kingsFound, 1)[0];
+            stack.push(aKing);  // add it back to the end.
+            // Now increment this so that we can account for mutating the array
+            // while iterating it.
+            kingsFound += 1;
+          }
+        }
+
+        decks.push(stack);
       }
 
       return decks.map(deck => ({
