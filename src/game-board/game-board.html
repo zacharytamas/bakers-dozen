@@ -50,6 +50,23 @@
       _dealNewGame(e){
         this.dispatchEvent(new CustomEvent('new-game',{bubbles: true, composed: true}));
       }
+      _canCardMoveHere(card, stack){
+        //create an array of all of the possible ranks
+        var rankList = new Array['a','2','3','4','5','6','7','8','9','j','q','k'];
+        //To be able to properly compare, we will have to translate the ranks of the cards into numerical values
+        var cardRank = rankList.indexOf(card.rank);
+        //This one is a hair trickier, basically I only look at the card at the top of the stack. Because I do not know how
+        //large the stack can be,I use stack.length to always be relevent. Since length is 1 based and Arrays are 0-based we subtract
+        //1 to avoid an out of bounds exception.
+        var stackCardRank = rankList.indexOf(stack[stack.length-1].rank);
+        //Simple comparison here. If the the card we want to place is a rank lower than the card on top of the stack (suit doesn't matter here)
+        //Then we return true. Else we return false. 
+        if(cardRank == stackCardRank - 1){
+          return true;
+        } else{
+          return false;
+        }
+      }
     }
 
     window.customElements.define(GameBoard.is, GameBoard);
