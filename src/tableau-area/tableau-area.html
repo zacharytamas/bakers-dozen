@@ -60,12 +60,18 @@
         return false;
       }
 
-      _dragOver(e){
-        e.preventDefault();
+      _dragOver(event) {
+        event.preventDefault();
       }
-      _drop(e){
-          e.preventDefault();
-          this.dispatchEvent(new CustomEvent('card-dropped', {detail: e.target, bubbles: true, composed: true}));
+
+      _drop(event) {
+        event.preventDefault();
+
+        this.dispatchEvent(new CustomEvent('card-dropped', {
+          detail: event.target,
+          bubbles: true,
+          composed: true
+        }));
       }
 
     }

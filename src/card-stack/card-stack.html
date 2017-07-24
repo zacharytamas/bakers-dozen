@@ -66,8 +66,15 @@
         return GameCard[suit.toUpperCase()];
       }
 
-      _dragStart(e){
-        this.dispatchEvent(new CustomEvent('drag-start', {detail: {card: e.target, stack: this}, bubbles: true, composed: true}));
+      _dragStart(event){
+        this.dispatchEvent(new CustomEvent('drag-start', {
+          detail: {
+            card: event.target,
+            stack: this
+          },
+          bubbles: true,
+          composed: true
+        }));
       }
 
     }
