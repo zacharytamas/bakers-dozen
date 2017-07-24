@@ -13,18 +13,17 @@
       }
 
       .stacks-row {
-      display:block;
-      width:1150px;
+        display: block;
+        width: 1150px;
       }
 
-
-
-      .stacks-row .tableau-top{
+      .stacks-row .tableau-top {
         vertical-align: top;
       }
-      .stacks-row .tableau-bottom{
-        position:static;
-        bottom:0px;
+
+      .stacks-row .tableau-bottom {
+        position: static;
+        bottom: 0px;
       }
 
     </style>
@@ -78,8 +77,13 @@
         * @param {object} e - event object.
         */
       _drop(e){
-          e.preventDefault();
-          this.dispatchEvent(new CustomEvent('card-dropped', {detail: e.target, bubbles: true, composed: true}));
+        e.preventDefault();
+
+        this.dispatchEvent(new CustomEvent('card-dropped', {
+          detail: e.target,
+          bubbles: true,
+          composed: true
+        }));
       }
 
     }

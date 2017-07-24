@@ -10,12 +10,12 @@
         display: block;
 
         @apply --layout-vertical;
-        margin:0px 40px;
+        margin: 0px 40px;
       }
 
       .foundation-row {
         @apply --layout-flex;
-        width:134px;
+        width: 134px;
       }
 
       .foundation-stack {
@@ -41,23 +41,24 @@
         text-align: center;
       }
 
-      .foundation-row > card-stack{
-        position:absolute;
+      .foundation-row > card-stack {
+        position: absolute;
       }
+
       .foundation-row > card-stack:first-child {
-      top: 5px;
+        top: 5px;
       }
 
       .foundation-row > card-stack:nth-child(2) {
-        top:200px;
+        top: 200px;
       }
 
       .foundation-row > card-stack:nth-child(3) {
-        top:400px;
+        top: 400px;
       }
 
       .foundation-row > card-stack:nth-child(4) {
-        top:600px;
+        top: 600px;
       }
     </style>
 
@@ -65,7 +66,6 @@
       <template is="dom-repeat" items="[[stacks]]">
           <card-stack
             stack="[[item]]"  on-dragover="_dragOver" on-drop="_drop" foundation=true></card-stack>
-
       </template>
     </div>
 
@@ -102,8 +102,12 @@
           * @param {object} e - event object.
           */
         _drop(e){
-            e.preventDefault();
-            this.dispatchEvent(new CustomEvent('card-dropped', {detail: e.target, bubbles: true, composed: true}));
+          e.preventDefault();
+          this.dispatchEvent(new CustomEvent('card-dropped', {
+            detail: e.target,
+            bubbles: true,
+            composed: true
+          }));
         }
     }
 

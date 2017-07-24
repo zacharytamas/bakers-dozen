@@ -26,32 +26,29 @@
         margin-top: 0;
       }
 
-      .red{
+      .red {
         color:red;
       }
 
-      .symbol{
-        font-size:3em;
-        display:inline;
-        height:80px;
-        width:55px;
-        float:left;
-        vertical-align:middle;
-        text-align: center;
-        z-index:3;
-        position:relative;
+      .symbol {
+        font-size: 3em;
+        display: inline;
+        vertical-align: middle;
+        text-align:  center;
+        z-index: 3;
+        position: relative;
       }
 
-      .symbols{
-        display:block;
-        margin:16px;
-        width:124px;
-        height:176px;
-        border:1px solid #000;
-        border-radius:.35em;
+      .symbols {
+        display: block;
+        margin: 16px;
+        width: 124px;
+        height: 176px;
+        border: 1px solid #000;
+        border-radius: .35em;
         float: left;
-        position:absolute;
-        margin:0px;
+        position: absolute;
+        margin: 0px;
       }
 
 
@@ -106,14 +103,14 @@
       *
       * @param {object} card - GameCard object
       */
-      addCard(card){
+      addCard(card) {
 
           this.set('stack.cards', this.stack.cards.concat([card]));
           this.dispatchEvent(new CustomEvent('card-moved', {bubbles:true, composed:true}));
       }
 
       // Removes top card on stack.
-      popCard(){
+      popCard() {
         this.set('stack.cards', this.stack.cards.slice(0, this.stack.cards.length -1));
       }
 
@@ -131,7 +128,14 @@
         */
 
       _dragStart(e){
-        this.dispatchEvent(new CustomEvent('drag-start', {detail: {card: e.target, stack: this}, bubbles: true, composed: true}));
+        this.dispatchEvent(new CustomEvent('drag-start', {
+          detail: {
+            card: e.target,
+            stack: this
+          },
+          bubbles: true,
+          composed: true
+        }));
       }
 
       /**
