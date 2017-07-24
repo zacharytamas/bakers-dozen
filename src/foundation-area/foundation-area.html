@@ -10,58 +10,49 @@
         display: block;
 
         @apply --layout-vertical;
+        margin:0px 40px;
       }
 
       .foundation-row {
         @apply --layout-flex;
+        width:134px;
       }
-      .foundation-stack{
-        display:block;
-        margin:16px;
-        width:124px;
-        height:176px;
-        border:1px solid #000;
-        border-radius:.35em;
-      }
-      .red{
-        color:red;
-      }
-      .symbol{
-        font-size:3em;
-        display:inline-block;
-        position:relative;
-        padding:15px;
-
+      .foundation-row > card-stack > game-card{
         float:left;
-        vertical-align:middle;
-        text-align: center;
-      }
-      .top{
-
-      }
-      .bottom{
-
-      }
-      .left{
-
-      }
-      .right{
-
+        padding:0px;
       }
 
+      .foundation-row > card-stack{
+      position:absolute;
+      width:124px;
+      height:176px;
+      float:left;
+      z-index:3;
+      display:inline;
+      }
 
+      .foundation-row > card-stack:first-child {
+      top: 5px;
+      }
+
+      .foundation-row > card-stack:nth-child(2) {
+        top:200px;
+      }
+
+      .foundation-row > card-stack:nth-child(3) {
+        top:400px;
+      }
+
+      .foundation-row > card-stack:nth-child(4) {
+        top:600px;
+      }
     </style>
 
     <div class="foundation-row">
       <template is="dom-repeat" items="[[stacks]]">
-        <div class="foundation-stack" on-dragOver="_dragOver" on-drop="_drop">
-          <span class="top left symbol">♠</span>
-          <span class="top right symbol red">♦</span>
-          <span class="bottom left symbol red">♥</span>
-          <span class="bottom right symbol">♣</span>
           <card-stack
-            stack="[[item]]" ></card-stack>
-        </div>
+            stack="[[item]]"  on-dragover="_dragOver" on-drop="_drop" foundation=true></card-stack>
+
       </template>
     </div>
 
@@ -83,14 +74,24 @@
         };
       }
 
-      _dragOver(e) {
+      /**
+        *  ondragover event handler
+        *
+        * @param {object} e - event object.
+        */
+        _dragOver(e){
           e.preventDefault();
-      }
-      _drop(e){
-        e.preventDefault();
+        }
 
-      }
-
+        /**
+          *  Notifies the board that a card has dropped and emits a 'card-dropped' event.
+          *
+          * @param {object} e - event object.
+          */
+        _drop(e){
+            e.preventDefault();
+            this.dispatchEvent(new CustomEvent('card-dropped', {detail: e.target, bubbles: true, composed: true}));
+        }
     }
 
     window.customElements.define(FoundationArea.is, FoundationArea);

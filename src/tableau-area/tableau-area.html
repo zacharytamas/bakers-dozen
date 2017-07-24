@@ -13,15 +13,18 @@
       }
 
       .stacks-row {
-        @apply --layout-flex;
-        width: 1200px;
+      display:block;
+      width:1150px;
       }
+
+
+
       .stacks-row .tableau-top{
         vertical-align: top;
-
       }
       .stacks-row .tableau-bottom{
-      vertical-align: bottom;
+        position:static;
+        bottom:0px;
       }
 
     </style>
@@ -60,9 +63,20 @@
         return false;
       }
 
+    /**
+      *  ondragover event handler
+      *
+      * @param {object} e - event object.
+      */
       _dragOver(e){
         e.preventDefault();
       }
+
+      /**
+        *  Notifies the board that a card has dropped and emits a 'card-dropped' event.
+        *
+        * @param {object} e - event object.
+        */
       _drop(e){
           e.preventDefault();
           this.dispatchEvent(new CustomEvent('card-dropped', {detail: e.target, bubbles: true, composed: true}));

@@ -26,6 +26,35 @@
         margin-top: 0;
       }
 
+      .red{
+        color:red;
+      }
+
+      .symbol{
+        font-size:3em;
+        display:inline;
+        height:80px;
+        width:55px;
+        float:left;
+        vertical-align:middle;
+        text-align: center;
+        z-index:3;
+        position:relative;
+      }
+
+      .symbols{
+        display:block;
+        margin:16px;
+        width:124px;
+        height:176px;
+        border:1px solid #000;
+        border-radius:.35em;
+        float: left;
+        position:absolute;
+        margin:0px;
+      }
+
+
       /*.stack game-card[position="1"] { top: 40px; }
       .stack game-card[position="2"] { top: 80px; }
       .stack game-card[position="3"] { top: 120px; }*/
@@ -40,6 +69,14 @@
           position$="[[index]]"
           rank="[[item.rank]]"
           symbol="[[_symbolForSuit(item.suit)]]"></game-card>
+      </template>
+      <template is="dom-if" if="[[_isFoundation()]]">
+        <div class="symbols">
+        <span class="top left symbol">♠</span>
+        <span class="top right symbol red">♦</span>
+        <span class="bottom left symbol red">♥</span>
+        <span class="bottom right symbol">♣</span>
+      </div>
       </template>
     </div>
 
@@ -56,8 +93,28 @@
         return {
           stack: {
             type: Object
+          },
+          foundation:{
+            type: Boolean,
+            value: false
           }
         };
+      }
+
+      /**
+      * Adds a card to the stack and generates a 'card-moved' event.
+      *
+      * @param {object} card - GameCard object
+      */
+      addCard(card){
+
+          this.set('stack.cards', this.stack.cards.concat([card]));
+          this.dispatchEvent(new CustomEvent('card-moved', {bubbles:true, composed:true}));
+      }
+
+      // Removes top card on stack.
+      popCard(){
+        this.set('stack.cards', this.stack.cards.slice(0, this.stack.cards.length -1));
       }
 
       _symbolForSuit(suit) {
@@ -66,8 +123,24 @@
         return GameCard[suit.toUpperCase()];
       }
 
+      /**
+        *  Notifies the board that a card has started moving.  This generates a 'drag-start' event with the source
+        *  card and stack provided.
+        *
+        * @param {object} e - event object.
+        */
+
       _dragStart(e){
         this.dispatchEvent(new CustomEvent('drag-start', {detail: {card: e.target, stack: this}, bubbles: true, composed: true}));
+      }
+
+      /**
+      * Returns Boolean foundation
+      *
+      * @returns {Boolean} foundation
+      */
+      _isFoundation(){
+        return this.foundation;
       }
 
     }

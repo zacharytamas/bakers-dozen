@@ -48,6 +48,9 @@
           },
           movingCard:{
             type: Object
+          },
+          movingStack:{
+            type: Object
           }
         };
       }
@@ -59,19 +62,59 @@
       _dealNewGame(e){
         this.dispatchEvent(new CustomEvent('new-game',{bubbles: true, composed: true}));
       }
+
+      /**
+      * Increments card move count.
+      */
       _cardMoved(){
         this.set('boardState.moves', this.boardState.moves + 1);
       }
+
+      /**
+        * Process drag-start event and stores moving card and moving stack.
+        * @param {object} e - Event object
+        */
       _dragStart(e){
-        this.movingCard = {rank: e.detail.card.rank, symbol: e.detail.card.symbol};
+        this.movingCard = {rank: e.detail.card.rank, suit: this._convertSuit(e.detail.card.symbol)};
+        this.movingStack = e.detail.stack;
       }
+
+      /**
+      * Handles card-dropped event.  Verifies that the card exists in the target stack
+      * and moves the card after checking agains the rules.
+      *
+      * @param {e} e - Event Object
+      */
       _cardDropped(ev){
-        var index = this.boardState.tableauStacks.indexOf(ev.detail.stack);
-        if( index > -1){
-          this.boardState.tableauStacks[index].cards.push(this.movingCard);
-          this.set('boardState.tableauStacks[' + index + '].cards' , this.boardState.tableauStacks[index].cards);
-          this.dispatchEvent(new CustomEvent('card-moved', {bubbles:true, composed: true}));
-          }
+
+          ev.detail.addCard(this.movingCard);
+          this.movingStack.popCard();
+          
+      }
+
+      /**
+      * Converts the symbol received on the game card to the suit name.
+      *
+      * @param {String} symbol - utf-8 representation of card string.
+      */
+      _convertSuit(symbol){
+        switch(symbol){
+          case "♥":
+            return 'heart';
+          break;
+          case "♠":
+              return 'spade';
+          break;
+          case "♦":
+            return 'diamond';
+          break;
+          case "♣":
+            return 'club';
+          break;
+          default:
+            return
+          break;
+        }
       }
 
     }
