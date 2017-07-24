@@ -17,19 +17,31 @@
         @apply --layout-flex;
         width:134px;
       }
-      .foundation-row > card-stack > game-card{
-        float:left;
-        padding:0px;
+
+      .foundation-stack {
+        display: block;
+        margin: 16px;
+        width: 124px;
+        height: 176px;
+        border: 1px solid #000;
+        border-radius: .35em;
       }
 
-      .foundation-row > card-stack{
-      position:absolute;
-      width:124px;
-      height:176px;
-      float:left;
-      z-index:3;
-      display:inline;
+      .red {
+        color:red;
       }
+
+      .symbol {
+        font-size: 3em;
+        display: inline-block;
+        position: relative;
+        padding: 15px;
+
+        vertical-align: middle;
+        text-align: center;
+      }
+
+      .top {
 
       .foundation-row > card-stack:first-child {
       top: 5px;
