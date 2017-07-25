@@ -79,6 +79,7 @@
       _dragStart(e){
         this.movingCard = {rank: e.detail.card.rank, suit: this._convertSuit(e.detail.card.symbol)};
         this.movingStack = e.detail.stack;
+
       }
 
       /**
@@ -87,11 +88,16 @@
       *
       * @param {e} e - Event Object
       */
-      _cardDropped(ev){
+      _cardDropped(e){
 
-          ev.detail.addCard(this.movingCard);
+        if(this.movingStack.stack.cards[this.movingStack.stack.cards.length-1].rank === this.movingCard.rank
+          && this.movingStack.stack.cards[this.movingStack.stack.cards.length-1].suit === this.movingCard.suit){
+          e.detail.addCard(this.movingCard);
           this.movingStack.popCard();
-          
+        }else{
+          e.preventDefault();
+        }
+
       }
 
       /**
@@ -130,7 +136,7 @@
         //1 to avoid an out of bounds exception.
         var stackCardRank = rankList.indexOf(stack[stack.length-1].rank);
         //Simple comparison here. If the the card we want to place is a rank lower than the card on top of the stack (suit doesn't matter here)
-        //Then we return true. Else we return false. 
+        //Then we return true. Else we return false.
         if(cardRank == stackCardRank - 1){
           return true;
         } else{
