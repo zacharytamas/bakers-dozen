@@ -13,15 +13,17 @@
       }
 
       .stacks-row {
-        @apply --layout-flex;
-        width: 1200px;
+        display: block;
+        width: 1150px;
       }
-      .stacks-row .tableau-top{
-        vertical-align: top;
 
+      .stacks-row .tableau-top {
+        vertical-align: top;
       }
-      .stacks-row .tableau-bottom{
-      vertical-align: bottom;
+
+      .stacks-row .tableau-bottom {
+        position: static;
+        bottom: 0px;
       }
 
     </style>
@@ -29,10 +31,10 @@
     <div class="stacks-row">
       <template is="dom-repeat" items="[[stacks]]">
         <template is="dom-if" if="{{_isTop(index)}}">
-            <card-stack ondragover="_dragOver(event)" ondrop="_drop(event)" class="tableau-top" stack="[[item]]"></card-stack>
+            <card-stack on-dragover="_dragOver" on-drop="_drop" class="tableau-top" stack="{{item}}"></card-stack>
         </template>
         <template is="dom-if" if="{{!_isTop(index)}}">
-            <card-stack ondragover="_dragOver(event)" ondrop="_drop(event)" class="tableau-bottom" stack="[[item]]"></card-stack>
+            <card-stack on-dragover="_dragOver" on-drop="_drop" class="tableau-bottom" stack="{{item}}"></card-stack>
         </template>
       </template>
     </div>
@@ -59,6 +61,31 @@
           return true;
         return false;
       }
+
+    /**
+      *  ondragover event handler
+      *
+      * @param {object} e - event object.
+      */
+      _dragOver(e){
+        e.preventDefault();
+      }
+
+      /**
+        *  Notifies the board that a card has dropped and emits a 'card-dropped' event.
+        *
+        * @param {object} e - event object.
+        */
+      _drop(e){
+        e.preventDefault();
+
+        this.dispatchEvent(new CustomEvent('card-dropped', {
+          detail: e.target,
+          bubbles: true,
+          composed: true
+        }));
+      }
+
     }
 
     window.customElements.define(TableauArea.is, TableauArea);

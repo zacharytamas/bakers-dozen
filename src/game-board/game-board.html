@@ -3,31 +3,34 @@
 
 <link rel="import" href="../tableau-area/tableau-area.html">
 <link rel="import" href="../foundation-area/foundation-area.html">
+<link rel="import" href="../move-counter/move-counter.html">
 <dom-module id="game-board">
   <template>
     <style>
       :host {
-        display: block;
         @apply --layout-flex;
         @apply --layout-horizontal;
+
         background-color: #076324;
       }
 
       tableau-area {
-        dispaly:block
-        height:95%;
         @apply --layout-flex;
+
+        height: 95%;
       }
-      foundation-area{
-        height:95%;
-        display:block;
+
+      foundation-area {
+        height: 95%;
+        display: block;
       }
 
     </style>
     <div id="menu">
       <button on-click="_dealNewGame">New Game</button>
+      <move-counter moves="{{boardState.moves}}"></move-counter>
     </div>
-    <tableau-area  stacks="[[boardState.tableauStacks]]"></tableau-area>
+    <tableau-area  stacks="{{boardState.tableauStacks}}"></tableau-area>
     <foundation-area stacks="[[boardState.foundationStacks]]"></foundation-area>
 
   </template>
@@ -43,13 +46,86 @@
         return {
           boardState: {
             type: Object
+          },
+          movingCard:{
+            type: Object
+          },
+          movingStack:{
+            type: Object
           }
         };
       }
-
+      connectedCallback(){
+        this.addEventListener('card-moved', this._cardMoved);
+        this.addEventListener('drag-start', e => this._dragStart(e));
+        this.addEventListener('card-dropped', this._cardDropped);
+      }
       _dealNewGame(e){
         this.dispatchEvent(new CustomEvent('new-game',{bubbles: true, composed: true}));
       }
+
+
+      /**
+      * Increments card move count.
+      */
+      _cardMoved(){
+        this.set('boardState.moves', this.boardState.moves + 1);
+      }
+
+      /**
+        * Process drag-start event and stores moving card and moving stack.
+        * @param {object} e - Event object
+        */
+      _dragStart(e){
+        this.movingCard = {rank: e.detail.card.rank, suit: this._convertSuit(e.detail.card.symbol)};
+        this.movingStack = e.detail.stack;
+
+      }
+
+      /**
+      * Handles card-dropped event.  Verifies that the card exists in the target stack
+      * and moves the card after checking agains the rules.
+      *
+      * @param {e} e - Event Object
+      */
+      _cardDropped(e){
+
+        if(this.movingStack.stack.cards[this.movingStack.stack.cards.length-1].rank === this.movingCard.rank
+          && this.movingStack.stack.cards[this.movingStack.stack.cards.length-1].suit === this.movingCard.suit){
+          e.detail.addCard(this.movingCard);
+          this.movingStack.popCard();
+        }else{
+          e.preventDefault();
+        }
+
+      }
+
+      /**
+      * Converts the symbol received on the game card to the suit name.
+      *
+      * @param {String} symbol - utf-8 representation of card string.
+      */
+      _convertSuit(symbol){
+        switch(symbol){
+          case "♥":
+            return 'heart';
+          break;
+          case "♠":
+              return 'spade';
+          break;
+          case "♦":
+            return 'diamond';
+          break;
+          case "♣":
+            return 'club';
+          break;
+          default:
+            return
+          break;
+        }
+      }
+
+
       _canCardMoveHere(card, stack){
         //create an array of all of the possible ranks
         var rankList = new Array['a','2','3','4','5','6','7','8','9','j','q','k'];
@@ -60,13 +136,14 @@
         //1 to avoid an out of bounds exception.
         var stackCardRank = rankList.indexOf(stack[stack.length-1].rank);
         //Simple comparison here. If the the card we want to place is a rank lower than the card on top of the stack (suit doesn't matter here)
-        //Then we return true. Else we return false. 
+        //Then we return true. Else we return false.
         if(cardRank == stackCardRank - 1){
           return true;
         } else{
           return false;
         }
       }
+
     }
 
     window.customElements.define(GameBoard.is, GameBoard);
