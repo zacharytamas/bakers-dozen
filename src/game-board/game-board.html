@@ -61,6 +61,7 @@
         var stackCardRank = rankList.indexOf(stack[stack.length-1].rank);
         //Simple comparison here. If the the card we want to place is a rank lower than the card on top of the stack (suit doesn't matter here)
         //Then we return true. Else we return false.
+        //UPDATED: Added the ability to determine whether or not
         if(isFoundation == true){
           if(cardRank == stackCardRank - 1){
             return true;
@@ -68,7 +69,8 @@
             return false;
         }
         } else {
-          if(cardRank == stackCardRank - 1){
+
+          if(cardRank == stackCardRank + 1 && card.suit == stack[stack.length-1].suit){
             return true;
           } else {
             return false;
