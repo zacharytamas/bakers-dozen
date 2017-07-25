@@ -33,7 +33,7 @@
     <tableau-area  stacks="{{boardState.tableauStacks}}"></tableau-area>
     <foundation-area stacks="[[boardState.foundationStacks]]"></foundation-area>
 
-  </template>
+</template>
 
   <script>
     /**
@@ -145,7 +145,10 @@
       }
 
     }
+  }
 
-    window.customElements.define(GameBoard.is, GameBoard);
-  </script>
+}
+
+window.customElements.define(GameBoard.is, GameBoard);
+</script>
 </dom-module>

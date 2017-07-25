@@ -45,6 +45,7 @@
       const decks = [];
       deck = deck.slice();
 
+
       while (deck.length > 0) {
         // Cut a stack of four cards and save as a new array called `stack`.
         const stack = deck.splice(0, 4);
@@ -72,6 +73,7 @@
         }
 
         decks.push(stack);
+
       }
 
       return decks.map(deck => ({
