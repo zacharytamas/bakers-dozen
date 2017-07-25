@@ -5,81 +5,81 @@
 <link rel="import" href="../foundation-area/foundation-area.html">
 <dom-module id="game-board">
   <template>
-    <style>
-      :host {
-        display: block;
-        @apply --layout-flex;
-        @apply --layout-horizontal;
-        background-color: #076324;
+  <style>
+  :host {
+    display: block;
+    @apply --layout-flex;
+    @apply --layout-horizontal;
+    background-color: #076324;
+  }
+
+  tableau-area {
+    dispaly:block
+    height:95%;
+    @apply --layout-flex;
+  }
+  foundation-area{
+    height:95%;
+    display:block;
+  }
+
+  </style>
+  <div id="menu">
+    <button on-click="_dealNewGame">New Game</button>
+  </div>
+  <tableau-area  stacks="[[boardState.tableauStacks]]"></tableau-area>
+  <foundation-area stacks="[[boardState.foundationStacks]]"></foundation-area>
+
+</template>
+
+<script>
+/**
+* @customElement
+* @polymer
+*/
+class GameBoard extends Polymer.Element {
+  static get is() { return 'game-board'; }
+  static get properties() {
+    return {
+      boardState: {
+        type: Object
       }
+    };
+  }
 
-      tableau-area {
-        dispaly:block
-        height:95%;
-        @apply --layout-flex;
+  _dealNewGame(e){
+    this.dispatchEvent(new CustomEvent('new-game',{bubbles: true, composed: true}));
+  }
+  _canCardMoveHere(card, stack, isFoundation){
+    //create an array of all of the possible ranks
+    var rankList = new Array['a','2','3','4','5','6','7','8','9','j','q','k'];
+    //To be able to properly compare, we will have to translate the ranks of the cards into numerical values
+    var cardRank = rankList.indexOf(card.rank);
+    //This one is a hair trickier, basically I only look at the card at the top of the stack. Because I do not know how
+    //large the stack can be,I use stack.length to always be relevent. Since length is 1 based and Arrays are 0-based we subtract
+    //1 to avoid an out of bounds exception.
+    var stackCardRank = rankList.indexOf(stack[stack.length-1].rank);
+    //Simple comparison here. If the the card we want to place is a rank lower than the card on top of the stack (suit doesn't matter here)
+    //Then we return true. Else we return false.
+    //UPDATED: Added the ability to determine whether or not
+    if(isFoundation == true){
+      if(cardRank == stackCardRank - 1){
+        return true;
+      } else {
+        return false;
       }
-      foundation-area{
-        height:95%;
-        display:block;
-      }
+    } else {
 
-    </style>
-    <div id="menu">
-      <button on-click="_dealNewGame">New Game</button>
-    </div>
-    <tableau-area  stacks="[[boardState.tableauStacks]]"></tableau-area>
-    <foundation-area stacks="[[boardState.foundationStacks]]"></foundation-area>
-
-  </template>
-
-  <script>
-    /**
-     * @customElement
-     * @polymer
-     */
-    class GameBoard extends Polymer.Element {
-      static get is() { return 'game-board'; }
-      static get properties() {
-        return {
-          boardState: {
-            type: Object
-          }
-        };
-      }
-
-      _dealNewGame(e){
-        this.dispatchEvent(new CustomEvent('new-game',{bubbles: true, composed: true}));
-      }
-      _canCardMoveHere(card, stack, isFoundation){
-        //create an array of all of the possible ranks
-        var rankList = new Array['a','2','3','4','5','6','7','8','9','j','q','k'];
-        //To be able to properly compare, we will have to translate the ranks of the cards into numerical values
-        var cardRank = rankList.indexOf(card.rank);
-        //This one is a hair trickier, basically I only look at the card at the top of the stack. Because I do not know how
-        //large the stack can be,I use stack.length to always be relevent. Since length is 1 based and Arrays are 0-based we subtract
-        //1 to avoid an out of bounds exception.
-        var stackCardRank = rankList.indexOf(stack[stack.length-1].rank);
-        //Simple comparison here. If the the card we want to place is a rank lower than the card on top of the stack (suit doesn't matter here)
-        //Then we return true. Else we return false.
-        //UPDATED: Added the ability to determine whether or not
-        if(isFoundation == true){
-          if(cardRank == stackCardRank - 1){
-            return true;
-        } else {
-            return false;
-        }
-        } else {
-
-          if(cardRank == stackCardRank + 1 && card.suit == stack[stack.length-1].suit){
-            return true;
-          } else {
-            return false;
-        }
+      if(cardRank == stackCardRank + 1 && card.suit == stack[stack.length-1].suit){
+        return true;
+      } else {
+        return false;
       }
     }
+  }
 
-    }
+}
 
-    window.customElements.define(GameBoard.is, GameBoard);
-  </script>
+window.customElements.define(GameBoard.is, GameBoard);
+</script>
 </dom-module>
