@@ -18,15 +18,6 @@
         width: 134px;
       }
 
-      .foundation-stack {
-        display: block;
-        margin: 16px;
-        width: 124px;
-        height: 176px;
-        border: 1px solid #000;
-        border-radius: .35em;
-      }
-
       .red {
         color:red;
       }
@@ -60,12 +51,13 @@
       .foundation-row > card-stack:nth-child(4) {
         top: 600px;
       }
+
     </style>
 
     <div class="foundation-row">
       <template is="dom-repeat" items="[[stacks]]">
           <card-stack
-            stack="[[item]]"  on-dragover="_dragOver" on-drop="_drop" foundation=true></card-stack>
+            stack="[[item]]"  on-dragover="_dragOver" on-drop="_drop" foundation=true elementClass="foundation-stack"></card-stack>
       </template>
     </div>
 
