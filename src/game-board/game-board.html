@@ -5,6 +5,8 @@
 <link rel="import" href="../foundation-area/foundation-area.html">
 <link rel="import" href="../move-counter/move-counter.html">
 <link rel="import" href="../game-timer/game-timer.html">
+<link rel="import" href="../win-state/win-state.html">
+
 
 <dom-module id="game-board">
   <template>
@@ -38,7 +40,7 @@
 
     <tableau-area  stacks="{{boardState.tableauStacks}}"></tableau-area>
     <foundation-area stacks="[[boardState.foundationStacks]]"></foundation-area>
-
+    <win-state id="winState" state="[[boardState.winState]]"></win-state>
   </template>
 
   <script>
@@ -64,6 +66,11 @@
           boardHistory: {
             type: Array,
             value: []
+          },
+          winState:{
+            type:Boolean,
+            value:false,
+            observer: '_winStateChanged'
           }
         };
       }
@@ -71,6 +78,7 @@
         this.addEventListener('card-moved', this._cardMoved);
         this.addEventListener('drag-start', e => this._dragStart(e));
         this.addEventListener('card-dropped', this._cardDropped);
+        this.addEventListener('foundation-stack-complete', this._verifyWinState);
       }
 
       /**
@@ -100,6 +108,9 @@
 
         // Reset the timer for the new game.
         this.$.timer.reset();
+
+        //reset gameState
+        this.set('winState', false);
       }
 
       /**
@@ -212,6 +223,20 @@
         if (this.boardHistory.length > 0)
           this.set('boardState', this.boardHistory.pop());
 
+      }
+
+      _verifyWinState(e){
+        var winState = true;
+        this.boardState.foundationStacks.forEach((stack) =>{
+          if(stack.cards.length < 13)
+            winState = false;
+        });
+
+        if(winState == true)
+          this.set('winState', true);
+      }
+      _winStateChanged(){
+        this.$.winState.state= this.winState;
       }
 
 

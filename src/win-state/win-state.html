@@ -1,0 +1,60 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="win-state">
+  <template>
+    <template is="dom-if" if="[[state]]">
+    <style>
+    .win-state-box{
+      font-size:2em;
+      float:left;
+      z-index:10;
+      background-color:white;
+      border-radius: .35em;
+      border: 1px solid #000;
+      position:absolute;
+      top:0;
+      right:0;
+      left:0;
+      bottom:0;
+      width:200px;
+      margin: auto;
+      height:150px;
+      padding:1em;
+      text-align:center;
+      box-shadow: 2px 2px 2px 0px #000;
+    }
+    .win-state-box button{
+      margin-top:2em;
+      font-size:.75em;
+    }
+
+    </style>
+    <div class="win-state-box">
+    <div class="win-state">You Won!!!</div>
+    <button on-click="_newGame">New Game</button>
+  </div>
+  </template>
+  </template>
+
+  <script>
+    class WinState extends Polymer.Element {
+      static get is(){
+          return "win-state";
+      }
+
+      static get properties(){
+        return {
+          state:{
+            type: Boolean,
+            value: false
+          }
+        }
+      }
+      _newGame(){
+        this.dispatchEvent(new CustomEvent('new-game', {bubbles:true, composed:true}));
+      }
+    }
+
+    window.customElements.define(WinState.is, WinState);
+  </script>
+</dom-module>
