@@ -1,0 +1,83 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="game-timer">
+  <template>
+    <style>
+      :host {
+        margin: 0px 1em;
+        color: #fff;
+        font-size: 1.3em;
+      }
+    </style>
+    <div>[[_timeFormatted(time)]]</div>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class GameTimer extends Polymer.Element {
+      static get is() { return 'game-timer'; }
+
+      static get properties() {
+        return {
+          /**
+           * Time in seconds that the timer has been running.
+           */
+          time: {
+            type: Number,
+            value: 0
+          },
+          /**
+           * Whether the timer is currently running.
+           */
+          running: {
+            type: Boolean,
+            notify: true
+          }
+        };
+      }
+
+      /**
+       * Starts the timer, reseting the old timer if it exists.
+       */
+      start() {
+        this.stop();
+        this._interval = setInterval(() => this.time += 1, 1000);
+        this.running = true;
+      }
+
+      /**
+       * Stops the timer.
+       */
+      stop() {
+        clearInterval(this._interval);
+        this.running = false;
+      }
+
+      /**
+       * Stops the timer and resets it to zero.
+       */
+      reset() {
+        this.stop();
+        this.time = 0;
+      }
+
+      _timeFormatted(time) {
+        const minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+
+        // Quick hack to add a leading zero if less than 10.
+        if (seconds < 10) {
+          seconds = "0" + seconds;
+        }
+
+        return `${minutes}:${seconds}`;
+      }
+    }
+
+    window.customElements.define(GameTimer.is, GameTimer);
+  </script>
+
+</dom-module>
