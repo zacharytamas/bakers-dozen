@@ -4,6 +4,8 @@
 <link rel="import" href="../tableau-area/tableau-area.html">
 <link rel="import" href="../foundation-area/foundation-area.html">
 <link rel="import" href="../move-counter/move-counter.html">
+<link rel="import" href="../game-timer/game-timer.html">
+
 <dom-module id="game-board">
   <template>
     <style>
@@ -26,14 +28,17 @@
       }
 
     </style>
+
     <div id="menu">
       <button on-click="_dealNewGame">New Game</button>
       <move-counter moves="{{boardState.moves}}"></move-counter>
+      <game-timer id="timer"></game-timer>
     </div>
+
     <tableau-area  stacks="{{boardState.tableauStacks}}"></tableau-area>
     <foundation-area stacks="[[boardState.foundationStacks]]"></foundation-area>
 
-</template>
+  </template>
 
   <script>
     /**
@@ -55,20 +60,32 @@
           }
         };
       }
+
       connectedCallback(){
         this.addEventListener('card-moved', this._cardMoved);
         this.addEventListener('drag-start', e => this._dragStart(e));
         this.addEventListener('card-dropped', this._cardDropped);
       }
-      _dealNewGame(e){
-        this.dispatchEvent(new CustomEvent('new-game',{bubbles: true, composed: true}));
-      }
 
+      _dealNewGame() {
+        this.dispatchEvent(new CustomEvent('new-game',{
+          bubbles: true,
+          composed: true
+        }));
+
+        // Reset the timer for the new game.
+        this.$.timer.reset();
+      }
 
       /**
       * Increments card move count.
       */
       _cardMoved(){
+        // Start the game timer if it's not running already.
+        if (!this.$.timer.running) {
+          this.$.timer.start();
+        }
+
         this.set('boardState.moves', this.boardState.moves + 1);
       }
 
@@ -104,26 +121,20 @@
       *
       * @param {String} symbol - utf-8 representation of card string.
       */
-      _convertSuit(symbol){
+      _convertSuit(symbol) {
         switch(symbol){
           case "♥":
             return 'heart';
-          break;
           case "♠":
-              return 'spade';
-          break;
+            return 'spade';
           case "♦":
             return 'diamond';
-          break;
           case "♣":
             return 'club';
-          break;
           default:
             return
-          break;
         }
       }
-
 
       _canCardMoveHere(stack, card){
         //create an array of all of the possible ranks
@@ -136,8 +147,6 @@
         var stackCardRank = rankList.indexOf(stack);
         //Simple comparison here. If the the card we want to place is a rank lower than the card on top of the stack (suit doesn't matter here)
         //Then we return true. Else we return false.
-        console.log(cardRank+1);
-        console.log(stackCardRank+1);
         if(cardRank == stackCardRank - 1){
           return true;
         } else{
@@ -146,9 +155,6 @@
       }
 
     }
-
-
-
 
 window.customElements.define(GameBoard.is, GameBoard);
 </script>

@@ -21,7 +21,9 @@
 
     <board-generator id="generator"></board-generator>
 
-    <game-board board-state="[[gameState.boardState]]"></game-board>
+    <game-board
+      board-state="[[gameState.boardState]]"
+      on-new-game="_dealNewGame"></game-board>
 
   </template>
 
@@ -42,11 +44,10 @@
 
       ready() {
         super.ready();
-        this.addEventListener('new-game', this.dealNewGame);
-        this.dealNewGame();
+        this._dealNewGame();
       }
 
-      dealNewGame() {
+      _dealNewGame() {
         this.set('gameState', {
           boardState: this.$.generator.generateNewBoardState()
         });
