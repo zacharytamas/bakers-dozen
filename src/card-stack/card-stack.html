@@ -74,7 +74,7 @@
 
     </style>
 
-    <div class$="[[_stackClass()]]">
+    <div class$="[[_stackClass(foundation)]]">
       <template is="dom-repeat" items="[[stack.cards]]">
         <game-card
           draggable="true"
@@ -163,8 +163,8 @@
         return this.foundation;
       }
 
-      _stackClass(){
-        return (this.foundation==true ? "foundation-stack" : "stack");
+      _stackClass(foundation){
+        return (foundation==true ? "foundation-stack" : "stack");
       }
     }
 
