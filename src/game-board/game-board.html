@@ -33,6 +33,7 @@
       <button on-click="_dealNewGame">New Game</button>
       <move-counter moves="{{boardState.moves}}"></move-counter>
       <game-timer id="timer"></game-timer>
+      <button on-click="_undoMove">Undo</button>
     </div>
 
     <tableau-area  stacks="{{boardState.tableauStacks}}"></tableau-area>
@@ -46,22 +47,27 @@
      * @polymer
      */
     class GameBoard extends Polymer.Element {
-      static get is() { return 'game-board'; }
+      static get is() {
+        return 'game-board';
+      }
       static get properties() {
         return {
           boardState: {
             type: Object
           },
-          movingCard:{
+          movingCard: {
             type: Object
           },
-          movingStack:{
+          movingStack: {
             type: Object
+          },
+          boardHistory: {
+            type: Array,
+            value: []
           }
         };
       }
-
-      connectedCallback(){
+      connectedCallback() {
         this.addEventListener('card-moved', this._cardMoved);
         this.addEventListener('drag-start', e => this._dragStart(e));
         this.addEventListener('card-dropped', this._cardDropped);
@@ -82,7 +88,10 @@
         });
         return result;
       }
-
+      /**
+      * Event handler for New Game button
+      * @param {Object} e - Event object.
+      */
       _dealNewGame() {
         this.dispatchEvent(new CustomEvent('new-game',{
           bubbles: true,
@@ -106,11 +115,14 @@
       }
 
       /**
-        * Process drag-start event and stores moving card and moving stack.
-        * @param {object} e - Event object
-        */
-      _dragStart(e){
-        this.movingCard = {rank: e.detail.card.rank, suit: this._convertSuit(e.detail.card.symbol)};
+       * Process drag-start event and stores moving card and moving stack.
+       * @param {object} e - Event object
+       */
+      _dragStart(e) {
+        this.movingCard = {
+          rank: e.detail.card.rank,
+          suit: this._convertSuit(e.detail.card.symbol)
+        };
         this.movingStack = e.detail.stack;
 
       }
@@ -130,10 +142,12 @@
           if(!this._canCardMoveHere(this.movingCard, stack))
             return false;
 
+          //save state
+          this.boardHistory.push(JSON.parse(JSON.stringify(this.boardState)));
           //move the card.
           e.detail.addCard(this.movingCard);
           this.movingStack.popCard();
-        }else{
+        } else {
           e.preventDefault();
         }
 
@@ -190,9 +204,19 @@
 
         return false;
       }
+      /**
+       * Undo card move.  Returns to last boardState
+       *
+       */
+      _undoMove() {
+        if (this.boardHistory.length > 0)
+          this.set('boardState', this.boardHistory.pop());
+
+      }
+
 
     }
 
-window.customElements.define(GameBoard.is, GameBoard);
-</script>
+    window.customElements.define(GameBoard.is, GameBoard);
+  </script>
 </dom-module>
