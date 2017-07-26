@@ -17,15 +17,9 @@
         width: 1150px;
       }
 
-      .stacks-row .tableau-top {
-        vertical-align: top;
+      .tableau-bottom {
+        margin-top:100px;
       }
-
-      .stacks-row .tableau-bottom {
-        position: static;
-        bottom: 0px;
-      }
-
     </style>
 
     <div class="stacks-row">
@@ -33,11 +27,11 @@
         <template is="dom-if" if="{{_isTop(index)}}">
             <card-stack on-dragover="_dragOver" on-drop="_drop" class="tableau-top" stack="{{item}}"></card-stack>
         </template>
-        <template is="dom-if" if="{{!_isTop(index)}}">
+  <template is="dom-if" if="{{!_isTop(index)}}">
             <card-stack on-dragover="_dragOver" on-drop="_drop" class="tableau-bottom" stack="{{item}}"></card-stack>
         </template>
-      </template>
-    </div>
+  </template>
+  </div>
 
   </template>
 
@@ -47,7 +41,9 @@
      * @polymer
      */
     class TableauArea extends Polymer.Element {
-      static get is() { return 'tableau-area'; }
+      static get is() {
+        return 'tableau-area';
+      }
       static get properties() {
         return {
           stacks: {
@@ -57,26 +53,26 @@
       }
 
       _isTop(index) {
-        if(index <7)
+        if (index < 7)
           return true;
         return false;
       }
 
-    /**
-      *  ondragover event handler
-      *
-      * @param {object} e - event object.
-      */
-      _dragOver(e){
+      /**
+       *  ondragover event handler
+       *
+       * @param {object} e - event object.
+       */
+      _dragOver(e) {
         e.preventDefault();
       }
 
       /**
-        *  Notifies the board that a card has dropped and emits a 'card-dropped' event.
-        *
-        * @param {object} e - event object.
-        */
-      _drop(e){
+       *  Notifies the board that a card has dropped and emits a 'card-dropped' event.
+       *
+       * @param {object} e - event object.
+       */
+      _drop(e) {
         e.preventDefault();
 
         this.dispatchEvent(new CustomEvent('card-dropped', {

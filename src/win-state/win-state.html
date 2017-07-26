@@ -23,7 +23,7 @@
       text-align:center;
       box-shadow: 2px 2px 2px 0px #000;
     }
-    .win-state-box button{
+    .win-state-boxs button{
       margin-top:2em;
       font-size:.75em;
     }
@@ -38,20 +38,23 @@
 
   <script>
     class WinState extends Polymer.Element {
-      static get is(){
-          return "win-state";
+      static get is() {
+        return "win-state";
       }
 
-      static get properties(){
+      static get properties() {
         return {
-          state:{
+          state: {
             type: Boolean,
             value: false
           }
         }
       }
-      _newGame(){
-        this.dispatchEvent(new CustomEvent('new-game', {bubbles:true, composed:true}));
+      _newGame() {
+        this.dispatchEvent(new CustomEvent('new-game', {
+          bubbles: true,
+          composed: true
+        }));
       }
     }
 
