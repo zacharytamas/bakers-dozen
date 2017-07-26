@@ -10,19 +10,18 @@
         margin: 16px;
       }
 
-      .stack {
+      .stack, .foundation-stack {
         @apply --layout-vertical;
       }
 
-      .stack game-card {
+      .stack game-card, .foundation-stack game-card {
         font-size: 2em;
         height: 176px; /* 88 * 2 */
         width: 124px; /* 62 * 2 */
-
         margin-top: -136px;  /* this is -(heightOfCard - 40) */
       }
 
-      .stack game-card:first-child {
+      .stack game-card:first-child, .foundation-stack game-card:first-child {
         margin-top: 0;
       }
 
@@ -33,10 +32,11 @@
       .symbol {
         font-size: 3em;
         display: inline;
-        vertical-align: middle;
         text-align:  center;
-        z-index: 3;
-        position: relative;
+        z-index: 0;
+        position: absolute;
+        width:62px;
+        height:62px;
       }
 
       .symbols {
@@ -49,16 +49,32 @@
         float: left;
         position: absolute;
         margin: 0px;
+        z-index:0;
+      }
+      .foundation-stack game-card {
+        margin-top:-176px;
+        z-index:1;
       }
 
-
+      .bottom{
+        bottom:0px;
+      }
+      .left{
+        left:0px;
+      }
+      .right{
+        right:0px;
+      }
+      .top{
+        top:0px;
+      }
       /*.stack game-card[position="1"] { top: 40px; }
       .stack game-card[position="2"] { top: 80px; }
       .stack game-card[position="3"] { top: 120px; }*/
 
     </style>
 
-    <div class="stack">
+    <div class$="[[_stackClass(foundation)]]">
       <template is="dom-repeat" items="[[stack.cards]]">
         <game-card
           draggable="true"
@@ -147,6 +163,9 @@
         return this.foundation;
       }
 
+      _stackClass(foundation){
+        return (foundation==true ? "foundation-stack" : "stack");
+      }
     }
 
     window.customElements.define(CardStack.is, CardStack);
