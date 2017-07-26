@@ -59,7 +59,7 @@
           <card-stack
             stack="[[item]]"  on-dragover="_dragOver" on-drop="_drop" foundation=true></card-stack>
       </template>
-    </div>
+  </div>
 
   </template>
 
@@ -69,7 +69,9 @@
      * @polymer
      */
     class FoundationArea extends Polymer.Element {
-      static get is() { return 'foundation-area'; }
+      static get is() {
+        return 'foundation-area';
+      }
       static get properties() {
         return {
           stacks: {
@@ -78,31 +80,31 @@
           }
         };
       }
-      
+
 
 
       /**
-        *  ondragover event handler
-        *
-        * @param {object} e - event object.
-        */
-        _dragOver(e){
-          e.preventDefault();
-        }
+       *  ondragover event handler
+       *
+       * @param {object} e - event object.
+       */
+      _dragOver(e) {
+        e.preventDefault();
+      }
 
-        /**
-          *  Notifies the board that a card has dropped and emits a 'card-dropped' event.
-          *
-          * @param {object} e - event object.
-          */
-        _drop(e){
-          e.preventDefault();
-          this.dispatchEvent(new CustomEvent('card-dropped', {
-            detail: e.target,
-            bubbles: true,
-            composed: true
-          }));
-        }
+      /**
+       *  Notifies the board that a card has dropped and emits a 'card-dropped' event.
+       *
+       * @param {object} e - event object.
+       */
+      _drop(e) {
+        e.preventDefault();
+        this.dispatchEvent(new CustomEvent('card-dropped', {
+          detail: e.target,
+          bubbles: true,
+          composed: true
+        }));
+      }
     }
 
     window.customElements.define(FoundationArea.is, FoundationArea);

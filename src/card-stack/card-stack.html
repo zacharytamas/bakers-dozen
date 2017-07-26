@@ -83,7 +83,7 @@
           rank="[[item.rank]]"
           symbol="[[_symbolForSuit(item.suit)]]"></game-card>
       </template>
-      <template is="dom-if" if="[[_isFoundation()]]">
+  <template is="dom-if" if="[[_isFoundation()]]">
         <div class="symbols">
         <span class="top left symbol">♠</span>
         <span class="top right symbol red">♦</span>
@@ -91,7 +91,7 @@
         <span class="bottom right symbol">♣</span>
       </div>
       </template>
-    </div>
+  </div>
 
   </template>
 
@@ -101,13 +101,19 @@
      * @polymer
      */
     class CardStack extends Polymer.Element {
-      static get is() { return 'card-stack'; }
+      static get is() {
+        return 'card-stack';
+      }
       static get properties() {
         return {
           stack: {
             type: Object
           },
-          foundation:{
+          foundation: {
+            type: Boolean,
+            value: false
+          },
+          complete: {
             type: Boolean,
             value: false
           }
@@ -115,18 +121,29 @@
       }
 
       /**
-      * Adds a card to the stack and generates a 'card-moved' event.
-      *
-      * @param {object} card - GameCard object
-      */
+       * Adds a card to the stack and generates a 'card-moved' event.
+       *
+       * @param {object} card - GameCard object
+       */
       addCard(card) {
-          this.set('stack.cards', this.stack.cards.concat([card]));
-          this.dispatchEvent(new CustomEvent('card-moved', {bubbles:true, composed:true}));
+        this.set('stack.cards', this.stack.cards.concat([card]));
+        this.dispatchEvent(new CustomEvent('card-moved', {
+          bubbles: true,
+          composed: true
+        }));
+
+        if (card.rank.toLowerCase() == 'k') {
+          this.set('complete', true);
+          this.dispatchEvent(new CustomEvent('foundation-stack-complete', {
+            bubbles: true,
+            composed: true
+          }));
+        }
       }
 
       // Removes top card on stack.
       popCard() {
-        this.set('stack.cards', this.stack.cards.slice(0, this.stack.cards.length -1));
+        this.set('stack.cards', this.stack.cards.slice(0, this.stack.cards.length - 1));
       }
 
 
@@ -137,13 +154,13 @@
       }
 
       /**
-        *  Notifies the board that a card has started moving.  This generates a 'drag-start' event with the source
-        *  card and stack provided.
-        *
-        * @param {object} e - event object.
-        */
+       *  Notifies the board that a card has started moving.  This generates a 'drag-start' event with the source
+       *  card and stack provided.
+       *
+       * @param {object} e - event object.
+       */
 
-      _dragStart(e){
+      _dragStart(e) {
         this.dispatchEvent(new CustomEvent('drag-start', {
           detail: {
             card: e.target,
@@ -155,16 +172,16 @@
       }
 
       /**
-      * Returns Boolean foundation
-      *
-      * @returns {Boolean} foundation
-      */
-      _isFoundation(){
+       * Returns Boolean foundation
+       *
+       * @returns {Boolean} foundation
+       */
+      _isFoundation() {
         return this.foundation;
       }
 
-      _stackClass(foundation){
-        return (foundation==true ? "foundation-stack" : "stack");
+      _stackClass(foundation) {
+        return (foundation == true ? "foundation-stack" : "stack");
       }
     }
 

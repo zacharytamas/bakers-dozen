@@ -3,19 +3,25 @@
 
 <script>
   /**
-    * @customElement
-    * @polymer
-    */
+   * @customElement
+   * @polymer
+   */
   class BoardGenerator extends Polymer.Element {
-    static get is() { return 'board-generator'; }
+    static get is() {
+      return 'board-generator';
+    }
 
     _generateSuitOfCards(suit) {
-      return ['a','2','3','4','5','6','7','8','9','10','j','q','k']
-        .map(rank => ({suit, rank}));
+      return ['a', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k']
+        .map(rank => ({
+          suit,
+          rank
+        }));
     }
 
     _shuffleDeck(deck) {
-      var currentIndex = deck.length, temporaryValue, randomIndex;
+      var currentIndex = deck.length,
+        temporaryValue, randomIndex;
       deck = deck.slice();
 
       // While there remain elements to shuffle...
@@ -68,7 +74,7 @@
             // only removing one it is an array of one so I just immediately
             // take the zero-th one to get a reference to the actual card.
             let aKing = stack.splice(i, 1)[0];
-            stack.unshift(aKing);  // add it back to the beginning.
+            stack.unshift(aKing); // add it back to the beginning.
           }
         }
 
@@ -86,15 +92,23 @@
       const tableauStacks = this._dealDeckIntoTableauStacks(deck);
 
       return {
-          foundationStacks: [
-            {cards: []},
-            {cards: []},
-            {cards: []},
-            {cards: []}
-          ],
-          tableauStacks,
-          moves:0
-        };
+        foundationStacks: [{
+            cards: []
+          },
+          {
+            cards: []
+          },
+          {
+            cards: []
+          },
+          {
+            cards: []
+          }
+        ],
+        tableauStacks,
+        moves: 0,
+        winState: false
+      };
     }
   }
 

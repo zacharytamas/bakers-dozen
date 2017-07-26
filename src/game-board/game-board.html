@@ -5,6 +5,8 @@
 <link rel="import" href="../foundation-area/foundation-area.html">
 <link rel="import" href="../move-counter/move-counter.html">
 <link rel="import" href="../game-timer/game-timer.html">
+<link rel="import" href="../win-state/win-state.html">
+
 
 <dom-module id="game-board">
   <template>
@@ -26,19 +28,31 @@
         height: 95%;
         display: block;
       }
+      #menu{
+        width:160px;
+      }
+      #menu button{
+        color:#fff;
+        font-size:1.3em;
+        background-color:#000;
+        border:1px solid #ccc;
+        padding:5px;
+        width:150px;
+        }
 
     </style>
 
     <div id="menu">
       <button on-click="_dealNewGame">New Game</button>
+      <button on-click="_undoMove">Undo</button>
       <move-counter moves="{{boardState.moves}}"></move-counter>
       <game-timer id="timer"></game-timer>
-      <button on-click="_undoMove">Undo</button>
+
     </div>
 
     <tableau-area  stacks="{{boardState.tableauStacks}}"></tableau-area>
     <foundation-area stacks="[[boardState.foundationStacks]]"></foundation-area>
-
+    <win-state id="winState" state="[[boardState.winState]]"></win-state>
   </template>
 
   <script>
@@ -64,6 +78,11 @@
           boardHistory: {
             type: Array,
             value: []
+          },
+          winState: {
+            type: Boolean,
+            value: false,
+            observer: '_winStateChanged'
           }
         };
       }
@@ -71,41 +90,45 @@
         this.addEventListener('card-moved', this._cardMoved);
         this.addEventListener('drag-start', e => this._dragStart(e));
         this.addEventListener('card-dropped', this._cardDropped);
+        this.addEventListener('foundation-stack-complete', this._verifyWinState);
       }
 
       /**
-      * Check if a suit already exists in any of the foundation stacks
-      *
-      * @param {String} suit
-      */
-      foundationSuitExists(suit){
+       * Check if a suit already exists in any of the foundation stacks
+       *
+       * @param {String} suit
+       */
+      foundationSuitExists(suit) {
         //lets loop the stacks
         var result = false;
-        this.boardState.foundationStacks.forEach((stack)=>{
-          if(stack.cards.length > 0)
-            if(stack.cards[stack.cards.length -1].symbol == suit)
+        this.boardState.foundationStacks.forEach((stack) => {
+          if (stack.cards.length > 0)
+            if (stack.cards[stack.cards.length - 1].symbol == suit)
               result = true;
         });
         return result;
       }
       /**
-      * Event handler for New Game button
-      * @param {Object} e - Event object.
-      */
+       * Event handler for New Game button
+       * @param {Object} e - Event object.
+       */
       _dealNewGame() {
-        this.dispatchEvent(new CustomEvent('new-game',{
+        this.dispatchEvent(new CustomEvent('new-game', {
           bubbles: true,
           composed: true
         }));
 
         // Reset the timer for the new game.
         this.$.timer.reset();
+
+        //reset gameState
+        this.set('winState', false);
       }
 
       /**
-      * Increments card move count.
-      */
-      _cardMoved(){
+       * Increments card move count.
+       */
+      _cardMoved() {
         // Start the game timer if it's not running already.
         if (!this.$.timer.running) {
           this.$.timer.start();
@@ -128,18 +151,18 @@
       }
 
       /**
-      * Handles card-dropped event.  Verifies that the card exists in the target stack
-      * and moves the card after checking agains the rules.
-      *
-      * @param {e} e - Event Object
-      */
-      _cardDropped(e){
+       * Handles card-dropped event.  Verifies that the card exists in the target stack
+       * and moves the card after checking agains the rules.
+       *
+       * @param {e} e - Event Object
+       */
+      _cardDropped(e) {
         var stack = e.detail;
 
-        if(this.movingStack.stack.cards[this.movingStack.stack.cards.length-1].rank === this.movingCard.rank
-                    && this.movingStack.stack.cards[this.movingStack.stack.cards.length-1].suit === this.movingCard.suit){
+        if (this.movingStack.stack.cards[this.movingStack.stack.cards.length - 1].rank === this.movingCard.rank &&
+          this.movingStack.stack.cards[this.movingStack.stack.cards.length - 1].suit === this.movingCard.suit) {
 
-          if(!this._canCardMoveHere(this.movingCard, stack))
+          if (!this._canCardMoveHere(this.movingCard, stack))
             return false;
 
           //save state
@@ -154,12 +177,12 @@
       }
 
       /**
-      * Converts the symbol received on the game card to the suit name.
-      *
-      * @param {String} symbol - utf-8 representation of card string.
-      */
+       * Converts the symbol received on the game card to the suit name.
+       *
+       * @param {String} symbol - utf-8 representation of card string.
+       */
       _convertSuit(symbol) {
-        switch(symbol){
+        switch (symbol) {
           case "♥":
             return 'heart';
           case "♠":
@@ -173,33 +196,35 @@
         }
       }
 
-      _canCardMoveHere(card, stack){
+      _canCardMoveHere(card, stack) {
         //create an array of all of the possible ranks
-        var rankList = new Array('a','2','3','4','5','6','7','8','9','10','j','q','k');
+        var rankList = new Array('a', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k');
         //To be able to properly compare, we will have to translate the ranks of the cards into numerical values
         var cardRank = rankList.indexOf(card.rank);
 
         //If stack is empty make sure card is an ace and it doesn't exist in any other founation just incase.
-        if(stack.stack.cards.length == 0)
-          if(cardRank == 0){
-            if(stack.foundation)
+        if (stack.stack.cards.length == 0)
+          if (cardRank == 0) {
+            if (stack.foundation)
               return !this.foundationSuitExists(card.suit);
-          }else{ return false; }
+          } else {
+            return false;
+          }
 
         //This one is a hair trickier, basically I only look at the card at the top of the stack. Because I do not know how
         //large the stack can be,I use stack.length to always be relevent. Since length is 1 based and Arrays are 0-based we subtract
         //1 to avoid an out of bounds exception.
-        var topCard = stack.stack.cards[stack.stack.cards.length -1];
+        var topCard = stack.stack.cards[stack.stack.cards.length - 1];
         var stackCardRank = rankList.indexOf(topCard.rank);
 
         //card must be same symbol and +1 rank of top foundation card.
-        if(stack.foundation)
-          if(cardRank == stackCardRank +1 && card.suit == topCard.suit)
+        if (stack.foundation)
+          if (cardRank == stackCardRank + 1 && card.suit == topCard.suit)
             return true;
 
         //Simple comparison here. If the the card we want to place is a rank lower than the card on top of the stack (suit doesn't matter here)
         //Then we return true. Else we return false.
-        if(cardRank == stackCardRank - 1)
+        if (cardRank == stackCardRank - 1)
           return true;
 
         return false;
@@ -212,6 +237,33 @@
         if (this.boardHistory.length > 0)
           this.set('boardState', this.boardHistory.pop());
 
+      }
+
+      /**
+       * Checks the state of tableau stacks to see if the user has won.
+       *
+       * @param {Object} e - Event Object
+       */
+      _verifyWinState(e) {
+        var winState = true;
+        this.boardState.foundationStacks.forEach((stack) => {
+          if (stack.cards.length < 13)
+            winState = false;
+        });
+
+        if (winState == true) {
+          //set win true and stop the timer.
+          this.set('winState', true);
+          this.$.timer.stop();
+        }
+      }
+
+      /**
+       * Observer for winState
+       *
+       */
+      _winStateChanged() {
+        this.$.winState.state = this.winState;
       }
 
 
