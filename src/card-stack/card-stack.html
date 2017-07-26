@@ -120,7 +120,6 @@
       * @param {object} card - GameCard object
       */
       addCard(card) {
-
           this.set('stack.cards', this.stack.cards.concat([card]));
           this.dispatchEvent(new CustomEvent('card-moved', {bubbles:true, composed:true}));
       }
@@ -129,6 +128,7 @@
       popCard() {
         this.set('stack.cards', this.stack.cards.slice(0, this.stack.cards.length -1));
       }
+
 
       _symbolForSuit(suit) {
         // The unicode symbols for these are handily available as

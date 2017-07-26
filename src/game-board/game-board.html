@@ -67,6 +67,22 @@
         this.addEventListener('card-dropped', this._cardDropped);
       }
 
+      /**
+      * Check if a suit already exists in any of the foundation stacks
+      *
+      * @param {String} suit
+      */
+      foundationSuitExists(suit){
+        //lets loop the stacks
+        var result = false;
+        this.boardState.foundationStacks.forEach((stack)=>{
+          if(stack.cards.length > 0)
+            if(stack.cards[stack.cards.length -1].symbol == suit)
+              result = true;
+        });
+        return result;
+      }
+
       _dealNewGame() {
         this.dispatchEvent(new CustomEvent('new-game',{
           bubbles: true,
@@ -106,8 +122,15 @@
       * @param {e} e - Event Object
       */
       _cardDropped(e){
+        var stack = e.detail;
 
-        if(this._canCardMoveHere(e.detail.stack.cards[e.detail.stack.cards.length -1].rank, this.movingCard.rank)){
+        if(this.movingStack.stack.cards[this.movingStack.stack.cards.length-1].rank === this.movingCard.rank
+                    && this.movingStack.stack.cards[this.movingStack.stack.cards.length-1].suit === this.movingCard.suit){
+
+          if(!this._canCardMoveHere(this.movingCard, stack))
+            return false;
+
+          //move the card.
           e.detail.addCard(this.movingCard);
           this.movingStack.popCard();
         }else{
@@ -136,22 +159,36 @@
         }
       }
 
-      _canCardMoveHere(stack, card){
+      _canCardMoveHere(card, stack){
         //create an array of all of the possible ranks
         var rankList = new Array('a','2','3','4','5','6','7','8','9','10','j','q','k');
         //To be able to properly compare, we will have to translate the ranks of the cards into numerical values
-        var cardRank = rankList.indexOf(card);
+        var cardRank = rankList.indexOf(card.rank);
+
+        //If stack is empty make sure card is an ace and it doesn't exist in any other founation just incase.
+        if(stack.stack.cards.length == 0)
+          if(cardRank == 0){
+            if(stack.foundation)
+              return !this.foundationSuitExists(card.suit);
+          }else{ return false; }
+
         //This one is a hair trickier, basically I only look at the card at the top of the stack. Because I do not know how
         //large the stack can be,I use stack.length to always be relevent. Since length is 1 based and Arrays are 0-based we subtract
         //1 to avoid an out of bounds exception.
-        var stackCardRank = rankList.indexOf(stack);
+        var topCard = stack.stack.cards[stack.stack.cards.length -1];
+        var stackCardRank = rankList.indexOf(topCard.rank);
+
+        //card must be same symbol and +1 rank of top foundation card.
+        if(stack.foundation)
+          if(cardRank == stackCardRank +1 && card.suit == topCard.suit)
+            return true;
+
         //Simple comparison here. If the the card we want to place is a rank lower than the card on top of the stack (suit doesn't matter here)
         //Then we return true. Else we return false.
-        if(cardRank == stackCardRank - 1){
+        if(cardRank == stackCardRank - 1)
           return true;
-        } else{
-          return false;
-        }
+
+        return false;
       }
 
     }
